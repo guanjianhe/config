@@ -206,6 +206,117 @@ macro OutputSiblingSymbols()
 	SetCurrentBuf(hbuf)
 }
 
+// open the corresponding .cã€.Cã€.cpp or .hã€.Hã€.hpp file
+macro OpenCorrespondingCorHfile()
+{
+    //è¿”å›å½“å‰ç¼“å†²åŒºçš„å¥æŸ„
+    hbuf = GetCurrentBuf ()
+    //è¿”å›ä¸æ–‡ä»¶ç¼“å†²åŒºå…³è”çš„æ–‡ä»¶çš„åç§°ã€‚
+    bname = GetBufName (hbuf)
+    //è¿”å›å­—ç¬¦ä¸²çš„é•¿åº¦
+    len = strlen (bname)
+	//è¿”å›ä»(len-2)åˆ°ï¼ˆä½†ä¸åŒ…æ‹¬lenï¼‰èŒƒå›´å†…çš„bnameçš„ä¸­é—´å­—ç¬¦ä¸²
+    if (".c" == strmid (bname, len-2, len)|| ".C" == strmid (bname, len-2, len) || ".cpp" == strmid (bname, len-4, len))
+    {
+        //æ‹¼æ¥å¤´æ–‡ä»¶å
+        filename = strmid (bname, 0, len-2)#".h"
+        //æ‰“å¼€å¤´æ–‡ä»¶
+        hbufnext = OpenBuf (filename)
+
+        //æ‰“å¼€æˆåŠŸ
+        if (hbufnext != hNil)
+        {
+            //è®¾ç½®ç„¦ç‚¹
+            SetCurrentBuf (hbufnext)
+            return
+        }
+        else    //æ‰“å¼€å¤±è´¥
+        {
+            //æ‹¼æ¥å¤´æ–‡ä»¶å
+            filename = strmid (bname, 0, len-2)#".H"
+            //æ‰“å¼€å¤´æ–‡ä»¶
+            hbufnext = OpenBuf (filename)
+
+            //æ‰“å¼€æˆåŠŸ
+            if (hbufnext != hNil)
+            {
+                //è®¾ç½®ç„¦ç‚¹
+                SetCurrentBuf (hbufnext)
+                return
+            }
+            else    //æ‰“å¼€å¤±è´¥
+            {
+                //æ‹¼æ¥å¤´æ–‡ä»¶å
+                filename = strmid (bname, 0, len-4)#".hpp"
+                //æ‰“å¼€å¤´æ–‡ä»¶
+                hbufnext = OpenBuf (filename)
+
+                //æ‰“å¼€æˆåŠŸ
+                if (hbufnext != hNil)
+                {
+                    //è®¾ç½®ç„¦ç‚¹
+                    SetCurrentBuf (hbufnext)
+                    return
+                }
+                else
+                {
+                    Msg("é”™è¯¯!!!æ²¡æœ‰æ‰¾åˆ°.h .H .hppç»“å°¾çš„æ–‡ä»¶")
+                }
+            }
+        }            
+    }
+    else if (".h" == strmid (bname, len-2, len) || ".H" == strmid (bname, len-2, len) || ".hpp" == strmid (bname, len-4, len))
+    {
+        filename = strmid (bname, 0, len-2)#".c"
+        hbufnext = OpenBuf (filename)
+
+        //æ‰“å¼€æˆåŠŸ
+        if (hbufnext != hNil)
+        {
+            //è®¾ç½®ç„¦ç‚¹
+            SetCurrentBuf (hbufnext)
+            return
+        }
+        else
+        {
+            filename = strmid (bname, 0, len-2)#".C"
+            hbufnext = OpenBuf (filename)
+
+            //æ‰“å¼€æˆåŠŸ
+            if (hbufnext != hNil)
+            {
+                //è®¾ç½®ç„¦ç‚¹
+                SetCurrentBuf (hbufnext)
+                return
+            }
+            else
+            {
+                filename = strmid (bname, 0, len-4)#".cpp"
+                hbufnext = OpenBuf (filename)
+
+                //æ‰“å¼€æˆåŠŸ
+                if (hbufnext != hNil)
+                {
+                    //è®¾ç½®ç„¦ç‚¹
+                    SetCurrentBuf (hbufnext)
+                    return
+                }
+                else
+                {
+                    Msg("é”™è¯¯!!!æ²¡æœ‰æ‰¾åˆ°.c .C .cppç»“å°¾çš„æ–‡ä»¶")
+                    return
+                }
+            }
+        }            
+    }
+    else
+    {
+        Msg("é”™è¯¯!!!è¯¥æ–‡ä»¶ä¸æ˜¯ä»¥.h .H .hppæˆ–.c .C .cppç»“å°¾çš„æ–‡ä»¶")
+        return
+    }
+}
+
+
 
 // Given a symbol name, open the file its declared in and 
 // create a new output buffer listing all of the symbols declared
@@ -242,36 +353,4 @@ macro ListAllSiblings(symbol)
 
 }
 
-// open the corresponding .c or .h file
-macro OpenCorrespondingCorHfile()
-{
-    //·µ»Øµ±Ç°»º³åÇøµÄ¾ä±ú
-    hbuf = GetCurrentBuf ()
-    //·µ»ØÓëÎÄ¼ş»º³åÇø¹ØÁªµÄÎÄ¼şµÄÃû³Æ¡£
-    bname = GetBufName (hbuf)
-    //·µ»Ø×Ö·û´®µÄ³¤¶È
-    len = strlen (bname)
-	//·µ»Ø´Ó(len-2)µ½£¨µ«²»°üÀ¨len£©·¶Î§ÄÚµÄbnameµÄÖĞ¼ä×Ö·û´®
-    if (".c" == strmid (bname, len-2, len))
-    {
-        filename = strmid (bname, 0, len-2)#".h"
-    }
-    else if (".h" == strmid (bname, len-2, len))
-    {
-        filename = strmid (bname, 0, len-2)#".c"
-    }
-    else
-    {
-        filename = Nil
-    }
-    if (filename != Nil)
-    {
-        //½«ÃûÎªfilenameµÄÎÄ¼ş´ò¿ªµ½ÎÄ¼ş»º³åÇøÖĞ£¬²¢·µ»ØÎÄ¼ş»º³åÇøµÄ¾ä±ú¡£
-        hbufnext = OpenBuf (filename)
-        if (hbufnext != hNil)
-        {
-            SetCurrentBuf (hbufnext)
-        }
-    }
-}
 
