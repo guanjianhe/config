@@ -1,0 +1,1 @@
+"C:\Program Files (x86)\Dev-Cpp\AStyle\AStyle.exe" --options="C:\Program Files (x86)\Dev-Cpp\AStyle\AS.cfg" %f

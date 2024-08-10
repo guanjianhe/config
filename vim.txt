@@ -1,0 +1,20 @@
+set hlsearch "高亮
+set backspace=2  "可随时用退格键删除
+set autoindent "自动缩排
+set ruler "可显示最后一行的状态
+set showmode "左下角显示状态
+set nu "显示行号
+set bg=dark "设置背景色
+syntax on "语法检测开
+set showcmd
+set mouse=a
+set encoding=utf-8
+filetype indent on
+set tabstop=4
+set shiftwidth=4
+set expandtab
+set softtabstop=4
+set textwidth=80
+set showmatch
+set nobackup
+set noswapfile
