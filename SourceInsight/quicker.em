@@ -1,21 +1,9 @@
 
-macro _tsGetTabSize()
-{
-	szTabSize = GetReg("TabSize")
 
-	if (szTabSize != "")
-	{
-		tabSize = AsciiFromChar(szTabSize[0]) - AsciiFromChar("0")
-	}
-	else
-	{
-		spaces = Ask("How many spaces per tab for SpaceToTab converter?")
-		SetReg("TabSize", spaces)
-		tabSize = AsciiFromChar(spaces[0]) - AsciiFromChar("0")
-	}
 
-	return tabSize
-}
+
+
+
 
 macro AutoExpand()
 {
@@ -99,13 +87,56 @@ macro AutoExpand()
 		InsBufLine(hbuf, ln + 3, "@szLine@    " # "break;")
 		InsBufLine(hbuf, ln + 4, "@szLine@" # "}")
 	}
+	else if (wordinfo.szWord == "default")
+	{
+		SetBufSelText(hbuf, ":")
+		InsBufLine(hbuf, ln + 1, "@szLine@" # "{")
+		InsBufLine(hbuf, ln + 2, "@szLine@    " # "###")
+		InsBufLine(hbuf, ln + 3, "@szLine@    " # "break;")
+		InsBufLine(hbuf, ln + 4, "@szLine@" # "}")
+	}
 	else if (wordinfo.szWord == "/**")
 	{
 		InsBufLine(hbuf, ln + 1, " * \@brief   " # "###")
 		InsBufLine(hbuf, ln + 2, " * \@param   " # "###")
-		InsBufLine(hbuf, ln + 3, " * \@note    " # "###")
 		InsBufLine(hbuf, ln + 4, " * \@return  " # "###")
 		InsBufLine(hbuf, ln + 5, " */")
+	}
+	else if (wordinfo.szWord == "hfh")
+	{
+		offset = ln
+		SysTime = GetSysTime(1)
+		sz0=SysTime.Year
+		sz1=SysTime.month
+		sz3=SysTime.day
+		szTime = "@sz0@/@sz1@/@sz3@"
+
+		InsBufLine(hbuf, offset++, "/**")
+		InsBufLine(hbuf, offset++, " * \@file			" # "###")
+		InsBufLine(hbuf, offset++, " * \@brief			" # "###")
+		InsBufLine(hbuf, offset++, " * \@details			" # "###")
+		InsBufLine(hbuf, offset++, " * \@author			guanjianhe")
+		InsBufLine(hbuf, offset++, " * \@version			V1.0.0")
+		InsBufLine(hbuf, offset++, " * \@date			@szTime@")
+		InsBufLine(hbuf, offset++, " * \@copyright		Copyright(c) 2023 Slenergy Technology (A.H.), All Rights Reserved.")
+		InsBufLine(hbuf, offset++, " *******************************************************************************************")
+		InsBufLine(hbuf, offset++, " * \@par 修改日志:")
+		InsBufLine(hbuf, offset++, " * <table>")
+		InsBufLine(hbuf, offset++, " * <tr><th>Date				<th>Version			<th>Author		<th>Description")
+		InsBufLine(hbuf, offset++, " * <tr><td>@szTime@			<td>V1.0.0			<td>guanjianhe	<th>初始版本")
+		InsBufLine(hbuf, offset++, " * </table>")
+		InsBufLine(hbuf, offset++, " *")
+		InsBufLine(hbuf, offset++, " *******************************************************************************************")
+		InsBufLine(hbuf, offset++, " * \@par 示例:")
+		InsBufLine(hbuf, offset++, " * \@code")
+		InsBufLine(hbuf, offset++, " * 暂无")
+		InsBufLine(hbuf, offset++, " * \@endcode 示例:")
+		InsBufLine(hbuf, offset++, " */")
+	
+	}
+	else if (wordinfo.szWord == "cfh")
+	{
+	
 	}
 	else
 	{
@@ -163,84 +194,4 @@ macro GetWordLeftOfIch(ich, sz)
 	wordinfo.ichLim = ichLim;
 	
 	return wordinfo
-}
-
-
-
-macro CommentBlock()
-{
-	hbuf = GetCurrentBuf();
-	hwnd = GetCurrentWnd();
-
-	sel = GetWndSel(hwnd);
-
-	iLine = sel.lnFirst;
-	
-	while (iLine <= sel.lnLast)
-	{
-		szLine = GetBufLine(hbuf, iLine);
-		szLine = cat("//	", szLine);
-		PutBufLine(hbuf, iLine, szLine);
-		iLine = iLine + 1;
-	}
-
-	if (sel.lnFirst == sel.lnLast)
-	{
-		tabSize = _tsGetTabSize() - 1;
-		sel.ichFirst = sel.ichFirst + tabSize;
-		sel.ichLim = sel.ichLim + tabSize;
-	}
-	
-	SetWndSel(hwnd, sel);
-}
-
-macro UnCommentBlock()
-{
-	hbuf = GetCurrentBuf()
-	hwnd = GetCurrentWnd()
-	
-	sel = GetWndSel(hwnd)
-	iLine = sel.lnFirst
-	chTab = CharFromAscii(9)
-
-
-	tabSize = 0;
-	while (iLine <= sel.lnLast)
-	{
-		szLine = GetBufLine(hbuf, iLine)
-		len = strlen(szLine)
-		szNewLine = ""
-		
-		if (len > 1)
-		{
-			if (szLine[0] == "/" && szLine[1] == "/")
-			{
-				if (len > 2)
-				{
-					if (szLine[2] == chTab)
-					{
-						tabSize = _tsGetTabSize() - 1
-						szNewLine = strmid(szLine, 3, strlen(szLine))
-					}
-				}
-
-				if (szNewLine == "")
-				{
-					szNewLine = strmid(szLine, 2, strlen(szLine))
-					tabSize = 2
-				}
-				
-				PutBufLine(hbuf, iLine, szNewLine)
-			}
-		}
-		iLine = iLine + 1
-	}
-
-	if (sel.lnFirst == sel.lnLast)
-	{
-		sel.ichFirst = sel.ichFirst - tabSize
-		sel.ichLim = sel.ichLim - tabSize
-	}
-
-	SetWndSel(hwnd, sel)
 }
