@@ -332,6 +332,7 @@ macro InsertCFileHeader(hbuf, ln)
     InsBufLine(hbuf, offset++, "/* Private constants ---------------------------------------------------------*/")
     InsBufLine(hbuf, offset++, "/* Private types -------------------------------------------------------------*/")
     InsBufLine(hbuf, offset++, "/* Private variables ---------------------------------------------------------*/")
+    InsBufLine(hbuf, offset++, "/* Import function prototypes ------------------------------------------------*/")
     InsBufLine(hbuf, offset++, "/* Exported variables --------------------------------------------------------*/")
     InsBufLine(hbuf, offset++, "/* Private function prototypes -----------------------------------------------*/")
     InsBufLine(hbuf, offset++, "/* Exported functions --------------------------------------------------------*/")
@@ -346,8 +347,8 @@ macro InsertCPP(hbuf, ln)
     InsBufLine(hbuf, ln, "extern \"C\"{")
     InsBufLine(hbuf, ln, "#ifdef __cplusplus")
     InsBufLine(hbuf, ln, "")
-    
-    iTotalLn = GetBufLineCount (hbuf)            
+
+    iTotalLn = GetBufLineCount (hbuf)
     InsBufLine(hbuf, iTotalLn, "")
     InsBufLine(hbuf, iTotalLn, "#endif /* __cplusplus */")
     InsBufLine(hbuf, iTotalLn, "}")
@@ -364,9 +365,9 @@ macro TrimLeft(szLine)
     {
         return szLine
     }
-    
+
     nIdx = 0
-    
+
     while( nIdx < nLen )
     {
         if( ( szLine[nIdx] != " ") && (szLine[nIdx] != "\t") )
@@ -376,7 +377,7 @@ macro TrimLeft(szLine)
         
         nIdx = nIdx + 1
     }
-    
+
     return strmid(szLine,nIdx,nLen)
 }
 
@@ -389,6 +390,7 @@ macro TrimRight(szLine)
     {
         return szLine
     }
+
     nIdx = nLen
     
     while( nIdx > 0 )
@@ -403,6 +405,8 @@ macro TrimRight(szLine)
     
     return strmid(szLine,0,nIdx+1)
 }
+
+
 macro TrimString(szLine)
 {
     szLine = TrimLeft(szLine)
