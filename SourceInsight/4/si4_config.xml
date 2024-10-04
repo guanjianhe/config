@@ -656,9 +656,30 @@
 			<item Command="Tab" Keycode="Tab" />
 			<item Command="Back Tab" Keycode="(S)Tab" />
 			<item Command="Simple Tab" Keycode="(CA)Tab" />
+			<item Command="AStyle" Keycode="(A)X" Allocated="1" />
+			<item Command="AutoExpand" Keycode="(A)C" Allocated="1" />
 		</Main>
 	</Keymaps>
 	<CustomCommands>
+		<Command
+			Name="AStyle"
+			RunText="&quot;C:\Program Files (x86)\Dev-Cpp\AStyle\AStyle.exe&quot; --options=&quot;C:\Program Files (x86)\Dev-Cpp\AStyle\AS.cfg&quot; %f"
+			WorkingDir=""
+			NormalWindow="0"
+			CaptureOutput="0"
+			PasteOutput="0"
+			SaveFilesFirst="0"
+			PauseWhenDone="0"
+			BeepWhenDone="0"
+			WaitUntilDone="0"
+			ReloadFiles="0"
+			ExitToWindows="0"
+			ParseOutput="0"
+			LineThenFile="0"
+			RegexType="Source Insight"
+			Preset="0"
+			ParsePattern=""
+			/>
 		<Command
 			Name="Build Project"
 			RunText=""
@@ -1769,10 +1790,10 @@
 			AddToProject="1"
 			EmulateScreenFontsForPrinting="1"
 			LineUpWhiteSpace="1"
-			VisibleTabs="0"
-			VisibleSpaces="0"
+			VisibleTabs="1"
+			VisibleSpaces="1"
 			VisibleEOL="0"
-			ShowLineNumbers="0"
+			ShowLineNumbers="1"
 			ShowRightMargin="0"
 			ShowPageBreaks="0"
 			UseSymbolPane="1"
@@ -8514,7 +8535,7 @@
 				GroupMultipleRefs="1"
 				ShowLineNumbers="0"
 				ShowFileName="1"
-				AutoExpandLevels="1"
+				AutoExpandLevels="2"
 				CodeMetricsType="1"
 				SortType="1"
 				>
@@ -8523,7 +8544,7 @@
 				<CodeMetricsFilter CodeMetricsType="1" MinValue="0" MaxValue="0" />
 				<ViewRelationRules
 					ForTypes="Contents"
-					ForFunctions="References"
+					ForFunctions="Referenced by Functions"
 					ForVariables="References"
 					ForClasses="Inheritance"
 					ForFiles="None"
